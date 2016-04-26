@@ -5,20 +5,46 @@
    </head>
    <body style="margin: 0; padding: 0">
 
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/libs/three.js/build/three.js"></script>
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/libs/other/OrbitControls.js"></script>
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/src/Potree.js"></script>
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/src/PointCloudOctreeGeometry.js"></script>
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/src/PointCloudOctree.js"></script>
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/src/loader/POCLoader.js"></script>
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/src/loader/PointAttributes.js"></script>
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/src/utils.js"></script>
-     <script src="User/Dominic/Documents/GitHub/WPC-Potree/potree-master/src/LRU.js"></script>
+     <script src="./potree-master/‪libs/three.js/build/three.js"></script>
+     <script src="‪./libs/other/OrbitControls.js"></script>
+     <script src="‪./potree-master/src/Potree.js"></script>
+     <script src="./potree-master/src/PointCloudOctreeGeometry.js"></script>
+     <script src="‪./potree-master/src/PointCloudOctree.js"></script>
+     <script src="./potree-master/src/loader/POCLoader.js"></script>
+     <script src="‪./potree-master/src/loader/PointAttributes.js"></script>
+     <script src="./potree-master/src/utils.js"></script>
+     <script src="‪./potree-master/src/LRU.js"></script>
+	 
+	<div class="info" style="position: absolute; left: 300px; right: 300px; top: 10px; text-align: center;">
+		<a href="http://potree.org/" target="_blank">potree.org</a><br>
+		Point cloud courtesy of <a href="http://www.tcproject.net/" target="_blank">Simone Garagnani</a> (12.6M points)
+	</div>
+	
+	<!-- INFOS / STATS -->
+	<div id="lblNumVisibleNodes" class="info" style="position: absolute; left: 10px; top: 80px; width: 400px; color: white; display: none;"></div>
+	<div id="lblNumVisiblePoints" class="info" style="position: absolute; left: 10px; top: 100px; width: 400px; color: white; display: none;"></div>
+	<div id="lblMessage" class="info" style="position: absolute; left: 10px; bottom: 0px; width: 400px; color:white"></div>
+	
+	
+	
+	<div id="tools" style="position: fixed; width: 400px; bottom: 10px; right: 10px">
+		<img src="./Potree Viewer_files/earth_controls_1.png" onclick="useEarthControls()" title="Earth Controls">
+		<img src="./Potree Viewer_files/fps_controls.png" onclick="useFPSControls()" title="Fly Camera">
+		<img src="./Potree Viewer_files/orbit_controls.png" onclick="useOrbitControls()" title="Orbit Controls">
+		<img src="./Potree Viewer_files/focus.png" onclick="camera.zoomTo(pointcloud)" title="focus on pointcloud">
+		<img src="./Potree Viewer_files/flip_y_z.png" onclick="flipYZ()" title="flip y and z coordinates">
+		<img src="./Potree Viewer_files/angle.png" onclick="measuringTool.startInsertion({showDistances: false, showAngles: true, showArea: false, closed: true, maxMarkers: 3})" title="angle measurements">
+		<img src="./Potree Viewer_files/distance.png" onclick="measuringTool.startInsertion({showDistances: true, showArea: false, closed: false})" title="distance measurements">
+		<img src="./Potree Viewer_files/area.png" onclick="measuringTool.startInsertion({showDistances: true, showArea: true, closed: true})" title="area measurements">
+		<img src="./Potree Viewer_files/volume.png" onclick="volumeTool.startInsertion()" title="volume measurements">
+		<img src="./Potree Viewer_files/profile.png" onclick="profileTool.startInsertion({width: pointcloud.boundingSphere.radius / 100})" title="height profiles">
+		<img src="./Potree Viewer_files/clip_volume.png" onclick="volumeTool.startInsertion({clip: true})" title="clipping volumes">
+	</div>
 
      <script>
        var defaultPointSize = 0.03;
        var defaultLOD = 15;
-       var pointcloudPath = "Users/Dominic/Documents/GitHub/WPC-Potree/iand1cm.xyz_converted/cloud.js/";
+       var pointcloudPath = "‪./iand1cm.xyz_converted/cloud.js/";
 
        var renderer;
        var camera;
