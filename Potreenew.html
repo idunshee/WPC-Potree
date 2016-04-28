@@ -51,7 +51,10 @@
    	 <img src="./Potree Viewer_files/clip_volume.png" onclick="volumeTool.startInsertion({clip: true})" title="clipping volumes">
     </div>
     
-    <div id="renderArea"><canvas width="933" height="1003" style="width: 933px; height: 1003px;"></canvas></div>
+    <div id="renderArea"><canvas width="933" height="1003" style="width: 933px; height: 1003px;">
+        canvas, img { display:block; margin:1em auto; border:1px solid black; }
+        canvas { background:url(./iand1cm.xyz_converted/tree.jpg) }
+    </canvas></div>
 
     <script>
 
