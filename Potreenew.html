@@ -1,76 +1,77 @@
 <html>
 <head>
-	<meta charset="utf-8"/>
-	<title>Potree Viewer</title>
-	<!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">-->
-	<link rel="stylesheet" type="text/css" href="../examples/css/potree.css">
+    <meta charset="utf-8"/>
+    <title>Potree Viewer</title>
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">-->
+    <link rel="stylesheet" type="text/css" href="./Potree Viewer_files/potree.css">
 </head>
 <body>
 
-	<script src="../libs/three.js/build/three.js"></script>
-	<script src="../libs/other/stats.min.js"></script>
-	<script src="../libs/other/dat.gui.min.js"></script>
-	<script src="../libs/other/BinaryHeap.js"></script>
+    <script src="./Potree Viewer_files/three.js"></script>
+    <script src="./Potree Viewer_files/stats.min.js"></script>
+    <script src="./Potree Viewer_files/dat.gui.min.js"></script>
+    <script src="./Potree Viewer_files/BinaryHeap.js"></script>
+    
+    <script src="./Potree Viewer_files/potree.js"></script>
+    <script src="./Potree Viewer_files/ProgressBar.js"></script>
 
-	<script src="../build/js/potree.js"></script>
-	<script src="../examples/js/ProgressBar.js"></script>
+    <!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
+    <!-- INCLUDE SETTINGS HERE -->
+    <!--<script src="../libs/plasio/js/laslaz.js"></script>
+    <script src="../libs/plasio/vendor/bluebird.js"></script>
+    <script src="../build/js/laslaz.js"></script>-->
 
-	<!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
-	<!-- INCLUDE SETTINGS HERE -->
-	<!--<script src="../libs/plasio/js/laslaz.js"></script>
-	<script src="../libs/plasio/vendor/bluebird.js"></script>
-	<script src="../build/js/laslaz.js"></script>-->
+    <!-- HEADING -->
+    <div class="info" style="position: absolute; left: 300px; right: 300px; top: 10px; text-align: center;">
+   	 <a href="http://potree.org" target="_blank">potree.org</a><br>
+   	 McGrath, Skibbe, Enloe Woodpecker Cave Field School Lidar Data
+    </div>
 
-	<!-- HEADING -->
-	<div class="info" style="position: absolute; left: 300px; right: 300px; top: 10px; text-align: center;">
-		<a href="http://potree.org" target="_blank">potree.org</a><br>
-		McGrath, Skibbe, Enloe Woodpecker Cave Field School Lidar Data
-	</div>
+    <!-- INFOS / STATS -->
+    <div id="lblNumVisibleNodes" class="info" style="position: absolute; left: 10px; top: 80px; width: 400px; color: white; display: none;"></div>
+    <div id="lblNumVisiblePoints" class="info" style="position: absolute; left: 10px; top: 100px; width: 400px; color: white; display: none;"></div>
+    <div id="lblMessage" class="info" style="position: absolute; left: 10px; bottom: 0px; width: 400px; color:white"></div>
 
-	<!-- INFOS / STATS -->
-	<div id="lblNumVisibleNodes" class="info" style="position: absolute; left: 10px; top: 80px; width: 400px; color:white"></div>
-	<div id="lblNumVisiblePoints" class="info" style="position: absolute; left: 10px; top: 100px; width: 400px; color:white"></div>
-	<div id="lblMessage" class="info" style="position: absolute; left: 10px; bottom: 0px; width: 400px; color:white"></div>
+    <!-- TOOLS -->
+    <div id="tools" style="position: fixed; width: 400px; bottom: 10px; right: 10px">
+   	 <img src="./Potree Viewer_files/earth_controls_1.png" onclick="useEarthControls()" title="Earth Controls">
+   	 <img src="./Potree Viewer_files/fps_controls.png" onclick="useFPSControls()" title="Fly Camera">
+   	 <img src="./Potree Viewer_files/orbit_controls.png" onclick="useOrbitControls()" title="Orbit Controls">
+   	 <img src="./Potree Viewer_files/focus.png" onclick="camera.zoomTo(pointcloud)" title="focus on pointcloud">
+   	 <img src="./Potree Viewer_files/flip_y_z.png" onclick="flipYZ()" title="flip y and z coordinates">
+   	 <img src="./Potree Viewer_files/angle.png" onclick="measuringTool.startInsertion({showDistances: false, showAngles: true, showArea: false, closed: true, maxMarkers: 3})" title="angle measurements">
+   	 <img src="./Potree Viewer_files/distance.png" onclick="measuringTool.startInsertion({showDistances: true, showArea: false, closed: false})" title="distance measurements">
+   	 <img src="./Potree Viewer_files/area.png" onclick="measuringTool.startInsertion({showDistances: true, showArea: true, closed: true})" title="area measurements">
+   	 <img src="./Potree Viewer_files/volume.png" onclick="volumeTool.startInsertion()" title="volume measurements">
+   	 <img src="./Potree Viewer_files/profile.png" onclick="profileTool.startInsertion({width: pointcloud.boundingSphere.radius / 100})" title="height profiles">
+   	 <img src="./Potree Viewer_files/clip_volume.png" onclick="volumeTool.startInsertion({clip: true})" title="clipping volumes">
+    </div>
+    
+    <div id="renderArea"><canvas width="933" height="1003" style="width: 933px; height: 1003px;"></canvas></div>
 
-	<!-- TOOLS -->
-	<div id="tools" style="position: fixed; width: 400px; bottom: 10px; right: 10px">
-		<img src="../resources/icons/earth_controls_1.png" onclick="useEarthControls()" title="Earth Controls"/>
-		<img src="../resources/icons/fps_controls.png" onclick="useFPSControls()" title="Fly Camera"/>
-		<img src="../resources/icons/orbit_controls.png" onclick="useOrbitControls()" title="Orbit Controls"/>
-		<img src="../resources/icons/focus.png" onclick="camera.zoomTo(pointcloud)" title="focus on pointcloud"/>
-		<img src="../resources/icons/flip_y_z.png" onclick="flipYZ()" title="flip y and z coordinates"/>
-		<img src="../resources/icons/angle.png" onclick="measuringTool.startInsertion({showDistances: false, showAngles: true, showArea: false, closed: true, maxMarkers: 3})" title="angle measurements"/>
-		<img src="../resources/icons/distance.png" onclick="measuringTool.startInsertion({showDistances: true, showArea: false, closed: false})" title="distance measurements"/>
-		<img src="../resources/icons/area.png" onclick="measuringTool.startInsertion({showDistances: true, showArea: true, closed: true})" title="area measurements"/>
-		<img src="../resources/icons/volume.png" onclick="volumeTool.startInsertion()" title="volume measurements"/>
-		<img src="../resources/icons/profile.png" onclick="profileTool.startInsertion({width: pointcloud.boundingSphere.radius / 100})" title="height profiles"/>
-		<img src="../resources/icons/clip_volume.png" onclick="volumeTool.startInsertion({clip: true})" title="clipping volumes"/>
-	</div>
+    <script>
 
-	<div id="renderArea"></div>
+   	 var sceneProperties = {
+   		 path:   		 "./iand1cm.xyz_converted/cloud.js",
+   		 cameraPosition: null,
+   		 cameraTarget: null,
+   		 sizeType:    	 "Adaptive",   		 // options: "Fixed", "Attenuated", "Adaptive"
+   		 quality:    	 "Squares",    		 // options: "Squares", "Circles", "Interpolation", "Splats"
+   		 fov:    		 75,    			 // field of view in degree
+   		 material:    	 "Elevation",    			 // options: "RGB", "Height", "Intensity", "Classification"
+   		 pointLimit:     1,   				 // max number of points in millions
+   		 navigation:     "Orbit",   		 // options: "Earth", "Orbit", "Flight"
+   		 pointSize:    	 1,
+   		 useEDL:   		 true,   			 // eye-dome-lighting, especially usefull for point clouds without normals
+   	 };
+    </script>
+    <!--<script src="./examples/js/viewer.js"></script>-->
+    <script src="./Potree Viewer_files/viewer.js"></script><div style="position: fixed; bottom: 40px; width: 200px; margin-left: -100px; left: 50%; border-radius: 5px; border: 1px solid rgb(114, 118, 120); height: 16px; padding: 1px; text-align: center; opacity: 0; pointer-events: none; transition: all 0.2s ease; background-color: rgb(107, 168, 229);"><div style="position: absolute; border-radius: 5px; width: 100%; height: 100%; margin: 0px; padding: 0px; background-color: rgb(184, 225, 252);"> </div><div style="position: absolute; width: 100%;">loading: 100%</div></div>
 
-	<script>
-
-		var sceneProperties = {
-			path:			"../iand1cm.xyz_converted/cloud.js",
-			cameraPosition: null,
-			cameraTarget: null,
-			sizeType: 		"Adaptive",			// options: "Fixed", "Attenuated", "Adaptive"
-			quality: 		"Squares", 			// options: "Squares", "Circles", "Interpolation", "Splats"
-			fov: 			75, 				// field of view in degree
-			material: 		"Elevation", 				// options: "RGB", "Height", "Intensity", "Classification"
-			pointLimit: 	1,					// max number of points in millions
-			navigation: 	"Orbit",			// options: "Earth", "Orbit", "Flight"
-			pointSize: 		1,
-			useEDL:			true,				// eye-dome-lighting, especially usefull for point clouds without normals
-		};
-	</script>
-	<script src="../examples/js/viewer.js"></script>
-
-	<script>
-		heightMin = 25;
-		heightMax = 150;
-	</script>
+    <script>
+   	 heightMin = 25;
+   	 heightMax = 150;
+    </script>
 
 </body>
 </html>
